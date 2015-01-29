@@ -122,6 +122,7 @@ setMethod("summary", "metricMean", function(object = "metricMean", report="all")
     
     result <- merge(E, O, by=c("variable", "StationCode", "SampleID"), all=TRUE)
     names(result) <- c("OTU", "StationCode", "SampleID", "CaptureProb", "MeanObserved")
+    result$CaptureProb<-as.numeric(result$CaptureProb)
     result$MeanObserved[is.na(result$MeanObserved)] <- 0
     reportlist <- add(result[, c("StationCode", "SampleID", "OTU", "CaptureProb", "MeanObserved")])
     names(reportlist)[length(reportlist)] <- "Suppl1_OE"
