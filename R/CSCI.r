@@ -36,6 +36,7 @@
 #' @param purge A logical value indicating whether FinalID/LifeStageCode combinations not in the internal
 #' database should be removed from the data. If TRUE, purged taxa will be listed in output. If FALSE (default),
 #' any unrecognized combinations will cause an error.
+#' @param distinct A logical value to overwrite the \code{Distinct} column in \code{bugs} with \code{NA} values, default (\code{FALSE}) is leave as is.
 #' @export
 #' 
 #' @return 
@@ -66,11 +67,7 @@
 #' for a new set of sites based on a Random Forest predictive model} (Version 4.2)[R script]
 #' 
 #' @seealso \code{\link{bugs_stations}}
-
-
-
-
-CSCI <- function (bugs, stations, rand = sample.int(10000, 1), purge = FALSE) {
+CSCI <- function (bugs, stations, rand = sample.int(10000, 1), purge = FALSE, distinct = TRUE) {
   options(stringsAsFactors=FALSE)
   
   if(purge) {
@@ -81,6 +78,9 @@ CSCI <- function (bugs, stations, rand = sample.int(10000, 1), purge = FALSE) {
     bugs <- bugs[good, ]
   }
   
+  # make distinct NA 
+  if(!distinct) bugs$Distinct <- NA
+  
   names(bugs) <- csci_bugs_col[match(toupper(names(bugs)), toupper(csci_bugs_col))]
   bugs <- ddply(bugs, names(bugs)[names(bugs) != "BAResult"], plyr::summarise,
                 BAResult = sum(BAResult))
@@ -89,7 +89,7 @@ CSCI <- function (bugs, stations, rand = sample.int(10000, 1), purge = FALSE) {
                         correct = c(csci_predictors, "AREA_SQKM", "StationCode"))
   predCols <- toupper(names(stations)) %in% caseFix$upper
   names(stations)[predCols] <- caseFix$correct[match(toupper(names(stations)[predCols]),
-                                           caseFix$upper)]
+                                                     caseFix$upper)]
   
   stations$LogWSA <- if(!is.null(stations$AREA_SQKM))log10(stations$AREA_SQKM)
   
