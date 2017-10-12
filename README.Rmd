@@ -1,0 +1,51 @@
+---
+output:
+  html_document:
+    keep_md: yes
+    toc: no
+    self_contained: no
+---
+
+## CSCI
+
+#### *Raphael Mazor, raphaelm@sccwrp.org, Marcus W. Beck, marcusb@sccwrp.org, Mark W Engeln*
+
+R package materials to calculate the California Stream Condition Index (CSCI) based on O/E and pMMI scores using benthic macroinvertebrates.
+
+### Installation
+
+Install the package as follows:
+
+```{r, eval = FALSE}
+install.packages('devtools')
+library(devtools)
+install_github('SCCWRP/CSCI')
+library(CSCI)
+```
+
+### Citation
+
+Please cite the package as follows:
+
+Mazor, MD, Rehn, AC, Ode, PR, Engeln, M, Schiff, KC, Stein, ED, Gillett, DJ, Herbst, DB, Hawkins, CP. 2016. Bioassessment in complex environments: Designing an index for consistent meaning in different settings. Freshwater Science 35(1): 249-271.
+
+### Usage
+
+The core function is `CSCI` which requires taxonomic and site level data.
+```{r, echo = F, warning = F, message = F}
+devtools::load_all()
+```
+```{r}
+#A list of two data frames: bugs and stations
+data(bugs_stations) 
+
+# run the estimator
+results <- CSCI(bugs = bugs_stations[[1]], stations = bugs_stations[[2]])
+
+#see all the components of the report
+ls(results)
+
+ #see the core report
+results$core
+```
+
