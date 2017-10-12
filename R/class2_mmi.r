@@ -53,7 +53,7 @@ setMethod("metrics", "mmi", function(object){
 
 setMethod("rForest", "mmi", function(object){
   if(nrow(object@metrics) == 0){object <- metrics(object)}
-  load(system.file("data", "Metrics.RFModels_v2.RData",  package="CSCI"))
+  
   object@predictors <- merge(unique(object@bugdata[, c("StationCode", "SampleID")]), object@predictors, by="StationCode", all.x=TRUE)
   object@modelprediction <- as.data.frame(matrix(NA, nrow = nrow(object@predictors)))
   
@@ -61,7 +61,7 @@ setMethod("rForest", "mmi", function(object){
     object@predictors$LogWSA <-log10(object@predictors$AREA_SQKM)
   object@predictors$Log_P_MEAN <-  log10(object@predictors$P_MEAN + 0.00001)
   
-  res <- sapply(final.forests, function(rf)predict(rf, object@predictors))
+  res <- sapply(final_forests, function(rf)predict(rf, object@predictors))
   if(class(res)!="matrix")res <- data.frame(t(res[1:8]))
   
   object@modelprediction <- as.data.frame(res)

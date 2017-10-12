@@ -4,7 +4,7 @@ Title: Tools for California Freshwater Biotic Assessment
 Version: 1.1.2
 Date: 2013-10-13
 Author: MW Engeln
-Maintainer: <raphaelm@sccwrp.org>
+Maintainer: <marcusb@sccwrp.org>
 Description: Contains tools for calculating biotic integrity from taxonomic
     count data. Includes methods for a multimetric index and observed over
     expected index.
@@ -15,3 +15,4 @@ Depends:
     reshape2,
     BMIMetrics,
 RoxygenNote: 6.0.1
+LazyData: true
