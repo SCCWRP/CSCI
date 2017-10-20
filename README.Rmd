@@ -42,10 +42,10 @@ data(bugs_stations)
 # run the estimator
 results <- CSCI(bugs = bugs_stations[[1]], stations = bugs_stations[[2]])
 
-#see all the components of the report
+# see all the components of the report
 ls(results)
 
- #see the core report
-results$core
+# preview report components
+lapply(results, head)
 ```
 
