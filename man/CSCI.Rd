@@ -5,7 +5,7 @@
 \title{Score samples using the CSCI tool}
 \usage{
 CSCI(bugs, stations, rand = sample.int(10000, 1), purge = FALSE,
-  distinct = TRUE)
+  distinct = TRUE, trace = TRUE)
 }
 \arguments{
 \item{bugs}{A data frame with BMI data (see details)}
@@ -16,10 +16,15 @@ CSCI(bugs, stations, rand = sample.int(10000, 1), purge = FALSE,
 \code{sample.int(10000, 1)}}
 
 \item{purge}{A logical value indicating whether FinalID/LifeStageCode combinations not in the internal
-database should be removed from the data. If TRUE, purged taxa will be listed in output. If FALSE (default),
-any unrecognized combinations will cause an error.}
+database should be removed from the data. If FALSE (default), incorrect values are not purged and the CSCI function will 
+exit with the original data frame including a new column indicating which rows are incorrect.  A warning message is also
+returned indicating the row numbers and incorrect FinalID values.  If TRUE, the offending rows are removed and a warning
+message is returned indicating rows and incorrect values that were found.  See \code{\link{cleanData}} for details.
+column \code{fixFinalID} with TRUE/FALSE}
 
 \item{distinct}{A logical value to overwrite the \code{Distinct} column in \code{bugs} with \code{NA} values, default (\code{FALSE}) is leave as is.}
+
+\item{trace}{A logical value indicating if warning messages are returnd to the console during data pre-processing, see \code{\link{cleanData}} for details.}
 }
 \value{
 A list of data frames that serve as reports in varying detail:

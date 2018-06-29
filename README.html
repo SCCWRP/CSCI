@@ -11,7 +11,7 @@
 
 
 
-<title></title>
+<title>README.utf8</title>
 
 <script src="README_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,8 +20,8 @@
 <script src="README_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="README_files/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="README_files/navigation-1.1/tabsets.js"></script>
-<link href="README_files/highlightjs-1.1/default.css" rel="stylesheet" />
-<script src="README_files/highlightjs-1.1/highlight.js"></script>
+<link href="README_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="README_files/highlightjs-9.12.0/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -30,10 +30,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -121,8 +123,8 @@ $(document).ready(function () {
 
 <div id="csci" class="section level2">
 <h2>CSCI</h2>
-<div id="raphael-mazor-raphaelmsccwrp.org-marcus-w.-beck-marcusbsccwrp.org-mark-w-engeln" class="section level4">
-<h4><em>Raphael Mazor, <a href="mailto:raphaelm@sccwrp.org">raphaelm@sccwrp.org</a>, Marcus W. Beck, <a href="mailto:marcusb@sccwrp.org">marcusb@sccwrp.org</a>, Mark W Engeln</em></h4>
+<div id="raphael-mazor-raphaelmsccwrp.org-marcus-w.-beck-marcusbsccwrp.org-mark-w.-engeln" class="section level4">
+<h4><em>Raphael Mazor, <a href="mailto:raphaelm@sccwrp.org">raphaelm@sccwrp.org</a>, Marcus W. Beck, <a href="mailto:marcusb@sccwrp.org">marcusb@sccwrp.org</a>, Mark W. Engeln</em></h4>
 <p>R package materials to calculate the California Stream Condition Index (CSCI) based on O/E and pMMI scores using benthic macroinvertebrates.</p>
 </div>
 <div id="installation" class="section level3">
@@ -169,77 +171,77 @@ lapply(results, head)</code></pre>
 ## 5                      20                  9.7199341            6.250000
 ## 6                       1                 37.6218324           41.025641
 ##           E Mean_O     OoverE OoverE_Percentile       MMI MMI_Percentile
-## 1 10.248486   1.00 0.09757538              0.00 0.1638082           0.00
-## 2 10.248486   1.00 0.09757538              0.00 0.3488195           0.00
-## 3  7.544418   8.85 1.17305268              0.82 0.8337532           0.18
-## 4 12.953853  10.90 0.84144850              0.20 0.8478843           0.20
-## 5 10.248486  13.30 1.29775261              0.94 1.2126907           0.88
-## 6 10.248486   9.00 0.87817846              0.26 0.9063075           0.30
+## 1 10.248486    1.0 0.09757538              0.00 0.1638082           0.00
+## 2 10.248486    1.0 0.09757538              0.00 0.3488195           0.00
+## 3  7.544418    9.0 1.19293493              0.84 0.8328681           0.18
+## 4 12.953853   11.7 0.90320619              0.31 0.8370682           0.18
+## 5 10.248486   13.3 1.29775261              0.94 1.1998109           0.87
+## 6 10.248486    9.0 0.87817846              0.26 0.9046269           0.30
 ##        CSCI CSCI_Percentile
 ## 1 0.1306918            0.00
 ## 2 0.2231975            0.00
-## 3 1.0034029            0.51
-## 4 0.8446664            0.17
-## 5 1.2552216            0.94
-## 6 0.8922430            0.25
+## 3 1.0129015            0.53
+## 4 0.8701372            0.21
+## 5 1.2487818            0.94
+## 6 0.8914027            0.25
 ## 
 ## $Suppl1_mmi
 ##   StationCode   SampleID MMI_Score Clinger_PercentTaxa
 ## 1       Site3 BadSample1 0.1638082           0.0000000
 ## 2       Site3 BadSample2 0.3488195           0.0000000
-## 3       Site1    Sample1 0.8337532           0.2750616
-## 4       Site2    Sample2 0.8478843           0.4527886
-## 5       Site3    Sample3 1.2126907           0.6704316
-## 6       Site3    Sample4 0.9063075           0.6361472
+## 3       Site1    Sample1 0.8328681           0.2760172
+## 4       Site2    Sample2 0.8370682           0.4667822
+## 5       Site3    Sample3 1.1998109           0.6799713
+## 6       Site3    Sample4 0.9046269           0.6361472
 ##   Clinger_PercentTaxa_predicted Clinger_PercentTaxa_score
 ## 1                     0.6422118                 0.0000000
 ## 2                     0.6422118                 0.0000000
-## 3                     0.3929307                 0.5251934
-## 4                     0.6216008                 0.4429413
-## 5                     0.6422118                 0.7610671
+## 3                     0.3929307                 0.5267363
+## 4                     0.6216008                 0.4655352
+## 5                     0.6422118                 0.7764697
 ## 6                     0.6422118                 0.7057118
 ##   Coleoptera_PercentTaxa Coleoptera_PercentTaxa_predicted
 ## 1             0.00000000                       0.07977832
 ## 2             0.00000000                       0.07977832
-## 3             0.11529412                       0.08284403
-## 4             0.08046568                       0.05155909
-## 5             0.13160644                       0.07977832
-## 6             0.07464387                       0.07977832
+## 3             0.11362108                       0.08284403
+## 4             0.07902513                       0.05155909
+## 5             0.12844685                       0.07977832
+## 6             0.07286325                       0.07977832
 ##   Coleoptera_PercentTaxa_score Taxonomic_Richness
 ## 1                    0.2321037               1.00
 ## 2                    0.2321037               2.00
-## 3                    0.7510741              34.70
-## 4                    0.7346881              33.00
-## 5                    0.8406826              42.15
-## 6                    0.5772744              26.80
+## 3                    0.7433376              34.75
+## 4                    0.7280266              32.20
+## 5                    0.8260719              40.80
+## 6                    0.5690404              26.75
 ##   Taxonomic_Richness_predicted Taxonomic_Richness_score EPT_PercentTaxa
 ## 1                     32.27143                0.0000000       0.0000000
 ## 2                     32.27143                0.0000000       0.5000000
-## 3                     26.13860                0.9018592       0.2579412
-## 4                     32.79767                0.6764485       0.4491252
-## 5                     32.27143                0.9373779       0.5162991
-## 6                     32.27143                0.5234496       0.5559829
+## 3                     26.13860                0.9032075       0.2590565
+## 4                     32.79767                0.6548757       0.4542597
+## 5                     32.27143                0.9009738       0.5249808
+## 6                     32.27143                0.5221013       0.5589744
 ##   EPT_PercentTaxa_predicted EPT_PercentTaxa_score Shredder_Taxa
 ## 1                 0.5267920             0.0000000          0.00
 ## 2                 0.5267920             0.6971410          0.00
-## 3                 0.3943971             0.4924473          0.00
-## 4                 0.5783728             0.5059021          5.20
-## 5                 0.5267920             0.7275641          3.95
-## 6                 0.5267920             0.8016362          1.00
+## 3                 0.3943971             0.4945291          0.00
+## 4                 0.5783728             0.5154859          4.90
+## 5                 0.5267920             0.7437691          3.75
+## 6                 0.5267920             0.8072199          1.00
 ##   Shredder_Taxa_predicted Shredder_Taxa_score Intolerant_Percent
 ## 1                2.033700           0.2291321         0.00000000
 ## 2                2.033700           0.2291321         0.00000000
-## 3                1.929400           0.2457120         0.01090000
-## 4                3.760033           0.7813159         0.09097838
-## 5                2.033700           0.8570352         0.15210000
-## 6                2.033700           0.3880949         0.13797018
+## 3                1.929400           0.2457120         0.01060000
+## 4                3.760033           0.7336271         0.09254734
+## 5                2.033700           0.8252426         0.15350000
+## 6                2.033700           0.3880949         0.13674519
 ##   Intolerant_Percent_predicted Intolerant_Percent_score
-## 1                    0.1696027                0.1560095
-## 2                    0.1696027                0.1560095
-## 3                    0.1440950                0.2253785
-## 4                    0.3143217                0.0536157
-## 5                    0.1696027                0.4458112
-## 6                    0.1696027                0.4188892
+## 1                    0.1696027               0.15600955
+## 2                    0.1696027               0.15600955
+## 3                    0.1440950               0.22480688
+## 4                    0.3143217               0.05660509
+## 5                    0.1696027               0.44847871
+## 6                    0.1696027               0.41655515
 ## 
 ## $Suppl1_grps
 ##   StationCode pGroup1 pGroup2 pGroup3 pGroup4 pGroup5 pGroup6 pGroup7
@@ -253,11 +255,11 @@ lapply(results, head)</code></pre>
 ## 
 ## $Suppl1_OE
 ##   StationCode   SampleID   OTU CaptureProb MeanObserved
-## 1       Site1    Sample1 Acari   0.8814250         5.65
-## 2       Site2    Sample2 Acari   0.9585321         9.90
+## 1       Site1    Sample1 Acari   0.8814250         6.15
+## 2       Site2    Sample2 Acari   0.9585321         9.95
 ## 3       Site3 BadSample1 Acari   0.8678715         0.00
 ## 4       Site3 BadSample2 Acari   0.8678715         0.00
-## 5       Site3    Sample3 Acari   0.8678715        17.85
+## 5       Site3    Sample3 Acari   0.8678715        17.30
 ## 6       Site3    Sample4 Acari   0.8678715        37.00
 ## 
 ## $Suppl2_OE
@@ -269,33 +271,33 @@ lapply(results, head)</code></pre>
 ## 5       Site1  Sample1 Ceratopsyche_Hydropsyche 0.698923583910464
 ## 6       Site1  Sample1           Cheumatopsyche 0.193852461500248
 ##   Iteration1 Iteration2 Iteration3 Iteration4 Iteration5 Iteration6
-## 1          7          5          5          6          7          5
-## 2          7          7          5          7          7          7
-## 3         23         24         20         28         27         22
-## 4          1          2          2          2          2          2
-## 5          3          5          4          5          3          3
-## 6          1          1          1          0          1          2
+## 1          7          6          7          8          4          5
+## 2          4          4          8          6          7          5
+## 3         29         28         24         24         21         25
+## 4          2          2          2          2          2          0
+## 5          3          3          4          3          3          4
+## 6          1          1          2          0          1          2
 ##   Iteration7 Iteration8 Iteration9 Iteration10 Iteration11 Iteration12
-## 1          5          5          7           6           6           6
-## 2          9          7          8           5           6           6
-## 3         24         21         22          21          20          25
-## 4          1          2          2           0           1           0
-## 5          4          4          5           4           2           3
-## 6          2          1          1           2           1           2
+## 1          6          7          6           8           6           7
+## 2          6          7          4           6           8           8
+## 3         25         19         23          26          20          25
+## 4          2          2          2           1           0           2
+## 5          3          4          4           5           3           4
+## 6          1          2          2           0           2           1
 ##   Iteration13 Iteration14 Iteration15 Iteration16 Iteration17 Iteration18
-## 1           6           5           5           5           4           4
-## 2           5           5           6           8           7           5
-## 3          21          19          26          24          22          22
-## 4           2           1           2           2           2           1
-## 5           4           5           3           2           2           4
-## 6           2           1           1           1           1           1
+## 1           4           5           7           6           7           5
+## 2           6           3           8           6           8           7
+## 3          29          27          22          25          25          26
+## 4           2           2           1           2           2           1
+## 5           2           5           3           4           4           3
+## 6           2           2           2           1           1           0
 ##   Iteration19 Iteration20
-## 1           7           7
-## 2           8           7
-## 3          26          17
-## 4           0           2
-## 5           4           3
-## 6           2           2
+## 1           6           6
+## 2           9           7
+## 3          17          27
+## 4           2           0
+## 5           2           3
+## 6           1           2
 ## 
 ## $Suppl2_mmi
 ##   StationCode   SampleID              metric Iteration value

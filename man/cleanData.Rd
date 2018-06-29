@@ -4,14 +4,18 @@
 \alias{cleanData}
 \title{Score samples using the CSCI tool}
 \usage{
-cleanData(data, purge = TRUE)
+cleanData(data, purge = FALSE, trace = TRUE)
 }
 \arguments{
 \item{data}{A data frame with BMI data (see details)}
 
-\item{purge}{If true (default) a data frame will be returned
-with problematic rows removed. Else, a report of problems will be
-returned.}
+\item{purge}{If true, a data frame will be returned
+with problematic rows removed. Else, the original data frame
+will be returned with a new column, \code{fixFinalID}, with 
+T/F values indicating rows with the FinalID (T) to fix}
+
+\item{trace}{logical indicating if warning messages indicating problem
+rows are printed to the console}
 }
 \description{
 Function to find or remove errors in BMI data
@@ -25,4 +29,34 @@ with a LifeStageCode other than 'X').
 
 This functions requires that the dataframe contains at least two columns:
 FinalID and LifeStageCode.
+}
+\examples{
+
+# load bug, station data
+data(bugs_stations) 
+
+# create some wrong FinalID values in bug data
+wrongdata <- bugs_stations[[1]]
+wrongdata$FinalID <- as.character(wrongdata$FinalID)
+wrongdata$FinalID[c(1, 15, 30)] <- c('idwrong1', 'idwrong2', 'idwrong3')
+
+\dontrun{
+# default, purge nothing
+# indicates wrong rows and FinalIDs, new column fixFinalID with T/F for wrong/right
+cleanData(wrongdata)
+
+# CSCI function returns the same as above if purge is F and incorrect FinalID are found (default)
+CSCI(wrongdata, bugs_stations[[2]])
+
+# purge
+# indicates wrong rows and FinalIDs, removes from output
+cleanData(wrongdata, purge = TRUE)
+
+# create some wrong lifestagecodes, only applies if purge is T
+wrongdata$LifeStageCode <- as.character(wrongdata$LifeStageCode)
+wrongdata$LifeStageCode[c(2, 16, 31)] <- c('lscwrong1', 'lscwrong2', 'lscwrong3')
+
+# purge, notice new warnings
+cleanData(wrongdata, purge = TRUE)
+}
 }
