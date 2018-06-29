@@ -17,7 +17,7 @@ setClass("mmi", representation(subsample = "list",
 )
 
 setMethod("nameMatch", "mmi", function(object){
-  bugs <- BMI(object@bugdata)
+  bugs <- BMIMetrics::BMI(object@bugdata)
   class(bugs) <- rev(class(bugs))
   object@bugdata <- bugs
   return(object)
@@ -29,7 +29,7 @@ setMethod("subsample", "mmi", function(object, rand = sample(10000, 1)){
 
   object@subsample <- lapply(seq(1 + rand, 20 + rand), function(i){
     set.seed(i)
-    BMIMetrics:::sample(object@bugdata)
+    BMIMetrics::sample(object@bugdata)
   })
   return(object)
 })
@@ -39,7 +39,7 @@ setMethod("metrics", "mmi", function(object){
   
   metricsList <- lapply(1:20, function(i) {
     x <- object@subsample[[i]]
-    results <- BMICSCI(aggregate(x), effort=1)[c("SampleID", csci_metrics)]
+    results <- BMIMetrics::BMICSCI(aggregate(x), effort=1)[c("SampleID", csci_metrics)]
     names(results)[-1] <- paste0(names(results)[-1], "_", i)
     results
     })

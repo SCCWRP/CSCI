@@ -10,9 +10,14 @@ Description: Contains tools for calculating biotic integrity from taxonomic
     expected index.
 License: file LICENSE
 Depends:
-    methods,
+    R (>= 3.2.0),
+    methods
+Imports:
     randomForest,
     reshape2,
     BMIMetrics,
+    plyr, 
+    stringr,
+    vegan
 RoxygenNote: 6.0.1
 LazyData: true

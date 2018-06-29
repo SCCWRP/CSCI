@@ -44,6 +44,8 @@
 #' 
 #' @export
 #' 
+#' @import plyr reshape2 randomForest
+#' 
 #' @return 
 #' A list of data frames that serve as reports in varying detail:
 #' \item{core}{A summary of the CSCI results, and data quality flags, averaged across 20 iterations.}
@@ -74,7 +76,7 @@
 #' @seealso \code{\link{bugs_stations}}
 CSCI <- function (bugs, stations, rand = sample.int(10000, 1), purge = FALSE, distinct = TRUE, trace = TRUE) {
   options(stringsAsFactors=FALSE)
-  
+
   # pre-processing of bugs
   bugs <- cleanData(bugs, purge = purge, trace = trace)
   
@@ -93,7 +95,7 @@ CSCI <- function (bugs, stations, rand = sample.int(10000, 1), purge = FALSE, di
   predCols <- toupper(names(stations)) %in% caseFix$upper
   names(stations)[predCols] <- caseFix$correct[match(toupper(names(stations)[predCols]),
                                                      caseFix$upper)]
-  
+
   stations$LogWSA <- if(!is.null(stations$AREA_SQKM))log10(stations$AREA_SQKM)
   
   stations <- stations[, names(stations) %in% c("StationCode",

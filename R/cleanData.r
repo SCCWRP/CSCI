@@ -51,16 +51,19 @@
 #' 
 #' # purge, notice new warnings
 #' cleanData(wrongdata, purge = TRUE)
+#' 
+#' # CSCI function can use cleanData to purge on the fly
+#' CSCI(wrongdata, bugs_stations[[2]], purge = T)
 #' }
 
 
 cleanData <- function(data, purge = FALSE, trace = TRUE){
   
   # load BMI metadata with FinalID, lifestagecode, etc
-  meta <- loadMetaData()
+  meta <- BMIMetrics::loadMetaData()
   
   # get bug FinalID values from input data
-  data$FinalID <- str_trim(data$FinalID)
+  data$FinalID <- stringr::str_trim(data$FinalID)
   
   # fix final id cases in input data using metadata
   casefix <- meta$FinalID[match(toupper(data$FinalID),

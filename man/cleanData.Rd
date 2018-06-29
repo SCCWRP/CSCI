@@ -58,5 +58,8 @@ wrongdata$LifeStageCode[c(2, 16, 31)] <- c('lscwrong1', 'lscwrong2', 'lscwrong3'
 
 # purge, notice new warnings
 cleanData(wrongdata, purge = TRUE)
+
+# CSCI function can use cleanData to purge on the fly
+CSCI(wrongdata, bugs_stations[[2]], purge = T)
 }
 }

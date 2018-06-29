@@ -23,7 +23,7 @@ setMethod("nameMatch", "oe", function(object, effort = "SAFIT1__OTU_a"){
                             plyr::summarise, Result = sum(Result))[, c("SampleID", "Result")]
   names(object@oeresults)[2] <- "Count"
   ###Clean data###
-  object@bugdata$Taxa <- str_trim(object@bugdata$Taxa)
+  object@bugdata$Taxa <- stringr::str_trim(object@bugdata$Taxa)
   ##Aggregate taxa###
   object@bugdata <- ddply(object@bugdata, .(SampleID, StationCode, Taxa, LifeStageCode, Distinct),
                           plyr::summarise, Result = sum(Result))
@@ -63,7 +63,7 @@ setMethod("subsample", "oe", function(object, rand = sample.int(10000, 1)){
       rowSums(commMatrix, na.rm=TRUE)[rowSums(commMatrix, na.rm=TRUE) < 400]
     set.seed(i)
     
-    commMatrix <- rrarefy(commMatrix, samp)
+    commMatrix <- vegan::rrarefy(commMatrix, samp)
     
     if(i == 1+ rand)
       melt(commMatrix)

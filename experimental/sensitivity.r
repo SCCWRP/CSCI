@@ -7,7 +7,7 @@ predictorSensitivityMMI <- function(bugs, stations, pred, from, to, by, rand = s
   stopifnot(length(pred) == 1)
   stopifnot(pred %in% names(stations))
   mmi <- new("mmi", bugs, stations)
-  stopifnot(CSCI:::validity(mmi))
+  stopifnot(CSCI::validity(mmi))
   mmi_s <- subsample(mmi, rand)
   
   score_list <- lapply(seq(from, to, by), function(val){
@@ -26,7 +26,7 @@ predictorSensitivityE <- function(bugs, stations, pred, from, to, by, rand = sam
   stopifnot(length(pred) == 1)
   stopifnot(pred %in% names(stations))
   oe <- new("oe", bugs, stations)
-  stopifnot(CSCI:::validity(oe))
+  stopifnot(CSCI::validity(oe))
   oe_s <- subsample(oe, rand)
   
   score_list <- lapply(seq(from, to, by), function(val){
