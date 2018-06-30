@@ -2,7 +2,7 @@ globalVariables(c('metadata', 'ddply', 'BAResult', 'new', 'results', 'pnorm', 'l
                   'dataEllipse', 'dcast', 'extent', 'maxmin', 'melt', 'metric', 'oe_stuff', 
                   'rrarefy', 'variabledevt', '.', 'BMI', 'BMICSCI', 'Distinct', 'LifeStageCode', 'MMI_Score', 'OoverE', 'Result', 'STE',
                   'SampleID', 'StationCode', 'Taxa', 'acast', 'arrange', 'colwise', 'final_forests',
-                  'variable'))
+                  'variable', 'refsamples'))
 
 #' @importFrom stats aggregate pnorm predict princomp
 NULL
@@ -11,7 +11,4 @@ NULL
 NULL
 
 #' @importFrom methods getSlots new show slot slot<-
-NULL
-
-#' @importFrom grDevices dev.off
 NULL

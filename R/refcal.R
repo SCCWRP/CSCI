@@ -5,5 +5,5 @@
 #'  
 #' @format A \code{data.frame} 
 #'
-#' @details The object is used internally, from mahalData
+#' @details The object is used internally
 "refcal"

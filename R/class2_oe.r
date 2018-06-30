@@ -63,7 +63,7 @@ setMethod("subsample", "oe", function(object, rand = sample.int(10000, 1)){
       rowSums(commMatrix, na.rm=TRUE)[rowSums(commMatrix, na.rm=TRUE) < 400]
     set.seed(i)
     
-    commMatrix <- vegan::rrarefy(commMatrix, samp)
+    commMatrix <- vegan::rarefy(commMatrix, samp)
     
     if(i == 1+ rand)
       melt(commMatrix)
@@ -85,7 +85,7 @@ setMethod("subsample", "oe", function(object, rand = sample.int(10000, 1)){
 
 setMethod("rForest", "oe", function(object){
   if(nrow(object@oesubsample)==0){object <- subsample(object, rand = sample.int(10000, 1))}
-  load(system.file("data", "oe_stuff.rdata", package="CSCI"))
+
   if(is.null(object@predictors$LogWSA))
     object@predictors$LogWSA <-log10(object@predictors$AREA_SQKM)
   if(is.null(object@predictors$AREA_SQKM))

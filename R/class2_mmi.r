@@ -72,7 +72,7 @@ setMethod("rForest", "mmi", function(object){
 
 setMethod("score", "mmi", function(object){
   if(nrow(object@modelprediction) == 0){object <- rForest(object)}
-  load(system.file("data", "maxmin_v2.rdata",  package="CSCI"))
+
   col_names <- csci_metrics
   object@metrics <- object@metrics[order(object@metrics$SampleID), ]
   object@modelprediction <- object@modelprediction[order(object@modelprediction$V1), ]

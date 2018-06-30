@@ -12,6 +12,6 @@ averageMSE
 averageMSE
 }
 \details{
-The object is used internally, from mahalData
+The object is used internally
 }
 \keyword{datasets}
