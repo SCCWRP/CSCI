@@ -63,7 +63,7 @@ setMethod("subsample", "oe", function(object, rand = sample.int(10000, 1)){
       rowSums(commMatrix, na.rm=TRUE)[rowSums(commMatrix, na.rm=TRUE) < 400]
     set.seed(i)
     
-    commMatrix <- vegan::rarefy(commMatrix, samp)
+    commMatrix <- vegan::rrarefy(commMatrix, samp)
     
     if(i == 1+ rand)
       melt(commMatrix)
