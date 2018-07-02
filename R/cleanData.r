@@ -11,15 +11,28 @@
 #' with a LifeStageCode other than 'X').
 #' 
 #' This functions requires that the dataframe contains at least two columns:
-#' FinalID and LifeStageCode.
+#' \code{FinalID} and \code{LifeStageCode}.
+#' 
+#' The default value \code{purge = FALSE} will not remove rows where the FinalIDs
+#' are incorrect, otherwise they are removed.  In the former example, a new
+#' column \code{problemFinalID} is added as a T/F vector indicating which 
+#' rows are incorrect.  For both \code{purge = FALSE} and \code{purge = TRUE}, 
+#' rows with correct FinalID values are also checked for correct life stage codes
+#' in the \code{LifeStageCode} column.  Values are replaced with default values 
+#' in a lookup table provided with the package if they are incorrect.  A new 
+#' column \code{fixedLifeStageCode} is added as a T/F vector indicating which 
+#' rows were fixed for an incorrect life stage code. 
+#' 
+#' The argument \code{trace} specifies if warnings are returned to the console 
+#' that provide diagnostics on rows with incorrect \code{FinalID} or \code{LifeStageCode}
+#' values. Row numbers apply to input data and will differ from output data if rows
+#' are purged. 
 #' 
 #' @param data A data frame with BMI data (see details)
 #' @param purge If true, a data frame will be returned
-#' with problematic rows removed. Else, the original data frame
-#' will be returned with a new column, \code{fixFinalID}, with 
-#' T/F values indicating rows with the FinalID (T) to fix
-#' @param trace logical indicating if warning messages indicating problem
-#' rows are printed to the console
+#' with problematic rows removed, see details. 
+#' @param trace logical indicating if warnings 
+#' are printed to the console
 #' 
 #' @export
 #' 
@@ -28,18 +41,19 @@
 #' # load bug, station data
 #' data(bugs_stations) 
 #' 
+#' \dontrun{
+#' 
+#' # function return input data if no errors
+#' cleanData(bugs_stations[[1]])
+#' 
 #' # create some wrong FinalID values in bug data
 #' wrongdata <- bugs_stations[[1]]
 #' wrongdata$FinalID <- as.character(wrongdata$FinalID)
 #' wrongdata$FinalID[c(1, 15, 30)] <- c('idwrong1', 'idwrong2', 'idwrong3')
 #' 
-#' \dontrun{
 #' # default, purge nothing
 #' # indicates wrong rows and FinalIDs, new column fixFinalID with T/F for wrong/right
 #' cleanData(wrongdata)
-#' 
-#' # CSCI function returns the same as above if purge is F and incorrect FinalID are found (default)
-#' CSCI(wrongdata, bugs_stations[[2]])
 #' 
 #' # purge
 #' # indicates wrong rows and FinalIDs, removes from output
@@ -49,11 +63,11 @@
 #' wrongdata$LifeStageCode <- as.character(wrongdata$LifeStageCode)
 #' wrongdata$LifeStageCode[c(2, 16, 31)] <- c('lscwrong1', 'lscwrong2', 'lscwrong3')
 #' 
-#' # purge, notice new warnings
-#' cleanData(wrongdata, purge = TRUE)
+#' # notice new warnings, no purge
+#' cleanData(wrongdata)
 #' 
-#' # CSCI function can use cleanData to purge on the fly
-#' CSCI(wrongdata, bugs_stations[[2]], purge = T)
+#' #compare with purge
+#' cleanData(wrongdata, purge = TRUE)
 #' }
 
 
@@ -73,46 +87,60 @@ cleanData <- function(data, purge = FALSE, trace = TRUE){
   # logical vector of FinalID in input data that are not in metadata  
   nomatch <- !(data$FinalID %in% meta$FinalID)
   
+  # logical vector for life stage codes in clean data that are not matched in metadata
+  nolsc <- !with(data, paste(FinalID, LifeStageCode)) %in%
+    with(meta, paste(FinalID, LifeStageCode)) & data$FinalID %in% meta$FinalID
+  
+  # exit if data checks are good
+  if(!any(nomatch, nolsc)){
+  
+    if(trace) warning('Data already clean!')
+    return(data)
+    
+  }
+    
+  # add new column with T/F showing which lifestagecodes were wrong
+  data$fixedLifeStageCode <- nolsc
+  
+  # warning for incorrect lsc
+  if(trace & any(nolsc)){
+    warning('LifeStageCodes incorrect and replaced with defaults, rows ',
+            paste(rownames(data)[nolsc], collapse = ', '), ', replaced values for ',
+            paste(data[nolsc, 'FinalID'], data[nolsc, 'LifeStageCode'], collapse = ', '), 
+            ', see column fixedLifeStageCode'
+    )
+  
+  # replace lifestagecodes with defaults if incorrect for correct taxa
+  data$LifeStageCode[nolsc] <- meta$DefaultLifeStage[match(data$FinalID[nolsc], 
+                                                           meta$FinalID)]
+    
+  }
+  
   # remove offending records in input data with incorrect FinalID
   # or if no purge is false and all records found, do the same
-  if(purge | (!purge & sum(nomatch) == 0)){
+  if(purge){
     
     # console warning if purge is true and incorrect FinalID present
-    if(trace & purge & any(nomatch))
-      warning('Incorrect FinalIDs removed from input data, rows ',
+    if(trace & any(nomatch))
+      warning('Unrecognized FinalIDs removed from input, rows ',
               paste(which(nomatch), collapse = ', '), ', values ',
               paste(data$FinalID[nomatch], collapse = ', ')
       )
-
+    
     # clean input data with FinalID in metadata
     # or removes none if all FinalID present in data
     data <- data[!nomatch, ]
 
-    # logical vector for life stage codes in clean data that are matched in metadata
-    lsc <- with(data, paste(FinalID, LifeStageCode)) %in%
-      with(meta, paste(FinalID, LifeStageCode))
-
-    # console warning if incorrect LifeStagecode values were found
-    if(trace & any(!lsc))
-      warning('LifeStageCodes incorrect and replaced with defaults, rows ',
-              paste(rownames(data)[!lsc], collapse = ', '), ', replaced values for ',
-              paste(data[!lsc, 'FinalID'], data[!lsc, 'LifeStageCode'], collapse = ', ')
-      )
-    
-    # replace lifestagecodes with defaults if incorrect for correct taxa
-    data$LifeStageCode[!lsc] <- meta$DefaultLifeStage[match(data$FinalID[!lsc], 
-                                                         meta$FinalID)]
-
-  # purge is F and some FinalID not found
+  # purge is F
   } else {
     
-    # add new column with T/F showing which ones to fix
-    data$fixFinalID <- nomatch
+    # add new column with T/F showing which finalIDs to fix
+    data$problemFinalID <- nomatch
     
     if(trace)
-      warning('Incorrect FinalIDs retained for rows ' , paste(which(nomatch), collapse = ', '), 
+      warning('Unrecognized FinalIDs retained, rows ' , paste(which(nomatch), collapse = ', '), 
               ', values ', paste(data$FinalID[nomatch], collapse = ', '), 
-              ', see column fixFinalID')
+              ', see column problemFinalID')
     
   }
 

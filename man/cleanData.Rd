@@ -10,12 +10,10 @@ cleanData(data, purge = FALSE, trace = TRUE)
 \item{data}{A data frame with BMI data (see details)}
 
 \item{purge}{If true, a data frame will be returned
-with problematic rows removed. Else, the original data frame
-will be returned with a new column, \code{fixFinalID}, with 
-T/F values indicating rows with the FinalID (T) to fix}
+with problematic rows removed, see details.}
 
-\item{trace}{logical indicating if warning messages indicating problem
-rows are printed to the console}
+\item{trace}{logical indicating if warnings 
+are printed to the console}
 }
 \description{
 Function to find or remove errors in BMI data
@@ -28,25 +26,41 @@ FinalIDs with inappropriate life stage codes (e.g., non-insects
 with a LifeStageCode other than 'X').
 
 This functions requires that the dataframe contains at least two columns:
-FinalID and LifeStageCode.
+\code{FinalID} and \code{LifeStageCode}.
+
+The default value \code{purge = FALSE} will not remove rows where the FinalIDs
+are incorrect, otherwise they are removed.  In the former example, a new
+column \code{problemFinalID} is added as a T/F vector indicating which 
+rows are incorrect.  For both \code{purge = FALSE} and \code{purge = TRUE}, 
+rows with correct FinalID values are also checked for correct life stage codes
+in the \code{LifeStageCode} column.  Values are replaced with default values 
+in a lookup table provided with the package if they are incorrect.  A new 
+column \code{fixedLifeStageCode} is added as a T/F vector indicating which 
+rows were fixed for an incorrect life stage code. 
+
+The argument \code{trace} specifies if warnings are returned to the console 
+that provide diagnostics on rows with incorrect \code{FinalID} or \code{LifeStageCode}
+values. Row numbers apply to input data and will differ from output data if rows
+are purged.
 }
 \examples{
 
 # load bug, station data
 data(bugs_stations) 
 
+\dontrun{
+
+# function return input data if no errors
+cleanData(bugs_stations[[1]])
+
 # create some wrong FinalID values in bug data
 wrongdata <- bugs_stations[[1]]
 wrongdata$FinalID <- as.character(wrongdata$FinalID)
 wrongdata$FinalID[c(1, 15, 30)] <- c('idwrong1', 'idwrong2', 'idwrong3')
 
-\dontrun{
 # default, purge nothing
 # indicates wrong rows and FinalIDs, new column fixFinalID with T/F for wrong/right
 cleanData(wrongdata)
-
-# CSCI function returns the same as above if purge is F and incorrect FinalID are found (default)
-CSCI(wrongdata, bugs_stations[[2]])
 
 # purge
 # indicates wrong rows and FinalIDs, removes from output
@@ -56,10 +70,10 @@ cleanData(wrongdata, purge = TRUE)
 wrongdata$LifeStageCode <- as.character(wrongdata$LifeStageCode)
 wrongdata$LifeStageCode[c(2, 16, 31)] <- c('lscwrong1', 'lscwrong2', 'lscwrong3')
 
-# purge, notice new warnings
-cleanData(wrongdata, purge = TRUE)
+# notice new warnings, no purge
+cleanData(wrongdata)
 
-# CSCI function can use cleanData to purge on the fly
-CSCI(wrongdata, bugs_stations[[2]], purge = T)
+#compare with purge
+cleanData(wrongdata, purge = TRUE)
 }
 }

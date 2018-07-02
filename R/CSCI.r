@@ -33,14 +33,7 @@
 #' @param stations A data frame with environmental data, one row per station (see details)
 #' @param rand An integer to control the random number generator (RNG) seed for the subsampling. By default set to
 #' \code{sample.int(10000, 1)}
-#' @param purge A logical value indicating whether FinalID/LifeStageCode combinations not in the internal
-#' database should be removed from the data. If FALSE (default), incorrect values are not purged and the CSCI function will 
-#' exit with the original data frame including a new column indicating which rows are incorrect.  A warning message is also
-#' returned indicating the row numbers and incorrect FinalID values.  If TRUE, the offending rows are removed and a warning
-#' message is returned indicating rows and incorrect values that were found.  See \code{\link{cleanData}} for details.
-#' column \code{fixFinalID} with TRUE/FALSE 
 #' @param distinct A logical value to overwrite the \code{Distinct} column in \code{bugs} with \code{NA} values, default (\code{FALSE}) is leave as is.
-#' @param trace A logical value indicating if warning messages are returnd to the console during data pre-processing, see \code{\link{cleanData}} for details.
 #' 
 #' @export
 #' 
@@ -74,15 +67,9 @@
 #' for a new set of sites based on a Random Forest predictive model} (Version 4.2)[R script]
 #' 
 #' @seealso \code{\link{bugs_stations}}
-CSCI <- function (bugs, stations, rand = sample.int(10000, 1), purge = FALSE, distinct = TRUE, trace = TRUE) {
+CSCI <- function (bugs, stations, rand = sample.int(10000, 1), distinct = TRUE) {
   options(stringsAsFactors=FALSE)
 
-  # pre-processing of bugs
-  bugs <- cleanData(bugs, purge = purge, trace = trace)
-  
-  # return input data if cleanData is not purged and incorrect FinalID values were found
-  if(!purge & any(bugs$fixFinalID)) return(bugs)
-  
   # make distinct NA 
   if(!distinct) bugs$Distinct <- NA
   
