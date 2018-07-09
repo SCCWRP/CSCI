@@ -72,7 +72,7 @@
 
 
 cleanData <- function(data, purge = FALSE, trace = TRUE){
-  
+
   # load BMI metadata with FinalID, lifestagecode, etc
   meta <- BMIMetrics::loadMetaData()
   
@@ -137,7 +137,8 @@ cleanData <- function(data, purge = FALSE, trace = TRUE){
     # add new column with T/F showing which finalIDs to fix
     data$problemFinalID <- nomatch
     
-    if(trace)
+    # console warning if purge is false and incorrect FinalID present
+    if(trace & any(nomatch))
       warning('Unrecognized FinalIDs retained, rows ' , paste(which(nomatch), collapse = ', '), 
               ', values ', paste(data$FinalID[nomatch], collapse = ', '), 
               ', see column problemFinalID')
