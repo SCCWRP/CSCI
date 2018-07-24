@@ -23,16 +23,22 @@
 #' column \code{fixedLifeStageCode} is added as a T/F vector indicating which 
 #' rows were fixed for an incorrect life stage code. 
 #' 
-#' The argument \code{trace} specifies if warnings are returned to the console 
-#' that provide diagnostics on rows with incorrect \code{FinalID} or \code{LifeStageCode}
-#' values. Row numbers apply to input data and will differ from output data if rows
-#' are purged. 
+#' @return 
+#' If \code{msgs = FALSE} (default), a data frame is returned that is either the same 
+#' as the input if all checks have passed or a purged (\code{purge = TRUE}) or non-purged 
+#' \code{purge = FALSE}) dataset with additional columns for \code{FinalID} and 
+#' \code{LifeStageCode}.  If \code{msg = TRUE}, a two-element list is returned, where 
+#' the first element \code{data} is the data frame that would be returned if \code{msgs = FALSE}
+#' and the second element is \code{msg} with a concatenated character string of messages
+#' indicating if all checks have passed and if not, which issues were encountered.  In the 
+#' latter case, row numbers in the messages indicate which observations in the input data 
+#' had issues.
 #' 
 #' @param data A data frame with BMI data (see details)
 #' @param purge If true, a data frame will be returned
 #' with problematic rows removed, see details. 
-#' @param trace logical indicating if warnings 
-#' are printed to the console
+#' @param msgs logical, if \code{FALSE} a purged or non-purged data frame, if \code{TRUE} a
+#' two-element list with the data frame and concated list of messages, see the return value
 #' 
 #' @export
 #' 
@@ -43,8 +49,11 @@
 #' 
 #' \dontrun{
 #' 
-#' # function return input data if no errors
+#' # function returns input data
 #' cleanData(bugs_stations[[1]])
+#' 
+#' # same as above but retrieve msgs
+#' cleanData(bugs_stations[[1]], msgs = TRUE)
 #' 
 #' # create some wrong FinalID values in bug data
 #' wrongdata <- bugs_stations[[1]]
@@ -52,27 +61,33 @@
 #' wrongdata$FinalID[c(1, 15, 30)] <- c('idwrong1', 'idwrong2', 'idwrong3')
 #' 
 #' # default, purge nothing
-#' # indicates wrong rows and FinalIDs, new column fixFinalID with T/F for wrong/right
+#' # new columns fixedLifeStageCode, ProblemFinalID with T/F for wrong/right
 #' cleanData(wrongdata)
 #' 
 #' # purge
-#' # indicates wrong rows and FinalIDs, removes from output
+#' # removes from output
 #' cleanData(wrongdata, purge = TRUE)
 #' 
 #' # create some wrong lifestagecodes, only applies if purge is T
 #' wrongdata$LifeStageCode <- as.character(wrongdata$LifeStageCode)
 #' wrongdata$LifeStageCode[c(2, 16, 31)] <- c('lscwrong1', 'lscwrong2', 'lscwrong3')
 #' 
-#' # notice new warnings, no purge
+#' # no purge
 #' cleanData(wrongdata)
 #' 
 #' #compare with purge
 #' cleanData(wrongdata, purge = TRUE)
+#' 
+#' # with messages
+#' cleanData(wrongdata, purge = TRUE, msgs = TRUE)
 #' }
 
 
-cleanData <- function(data, purge = FALSE, trace = TRUE){
+cleanData <- function(data, purge = FALSE, msgs = FALSE){
 
+  # placeholder for msgs
+  msg <- NULL
+  
   # load BMI metadata with FinalID, lifestagecode, etc
   meta <- BMIMetrics::loadMetaData()
   
@@ -94,57 +109,59 @@ cleanData <- function(data, purge = FALSE, trace = TRUE){
   # exit if data checks are good
   if(!any(nomatch, nolsc)){
   
-    if(trace) warning('Data already clean!')
-    return(data)
+    out <- data
+    if(msgs){
+      
+      msg <- c(msg, 'Data already clean')
+      out <- list(data = out, msg = msg)
+    
+    } 
+    
+    return(out)
     
   }
-    
+  
   # add new column with T/F showing which lifestagecodes were wrong
   data$fixedLifeStageCode <- nolsc
   
-  # warning for incorrect lsc
-  if(trace & any(nolsc)){
-    warning('LifeStageCodes incorrect and replaced with defaults, rows ',
-            paste(rownames(data)[nolsc], collapse = ', '), ', replaced values for ',
-            paste(data[nolsc, 'FinalID'], data[nolsc, 'LifeStageCode'], collapse = ', '), 
-            ', see column fixedLifeStageCode'
-    )
+  # add new column with T/F showing which finalIDs to fix
+  data$problemFinalID <- nomatch
   
+  # msg for incorrect lsc
+  if(msgs & any(nolsc))
+    msg <- c(msg, 
+             paste0('LifeStageCodes incorrect and replaced with defaults, rows ',
+              paste(rownames(data)[nolsc], collapse = ', '), ', replaced values for ',
+              paste(data[nolsc, 'FinalID'], data[nolsc, 'LifeStageCode'], collapse = ', '), 
+              ', see column fixedLifeStageCode'
+             ))
+
+  # msg and incorrect FinalID present
+  if(msgs & any(nomatch))
+    msg <- c(msg, 
+             paste0('Unrecognized FinalIDs, rows ',
+                    paste(which(nomatch), collapse = ', '), ', values ',
+                    paste(data$FinalID[nomatch], collapse = ', ')
+             ))
+
   # replace lifestagecodes with defaults if incorrect for correct taxa
   data$LifeStageCode[nolsc] <- meta$DefaultLifeStage[match(data$FinalID[nolsc], 
                                                            meta$FinalID)]
-    
-  }
   
   # remove offending records in input data with incorrect FinalID
-  # or if no purge is false and all records found, do the same
   if(purge){
-    
-    # console warning if purge is true and incorrect FinalID present
-    if(trace & any(nomatch))
-      warning('Unrecognized FinalIDs removed from input, rows ',
-              paste(which(nomatch), collapse = ', '), ', values ',
-              paste(data$FinalID[nomatch], collapse = ', ')
-      )
-    
-    # clean input data with FinalID in metadata
-    # or removes none if all FinalID present in data
     data <- data[!nomatch, ]
-
-  # purge is F
-  } else {
-    
-    # add new column with T/F showing which finalIDs to fix
-    data$problemFinalID <- nomatch
-    
-    # console warning if purge is false and incorrect FinalID present
-    if(trace & any(nomatch))
-      warning('Unrecognized FinalIDs retained, rows ' , paste(which(nomatch), collapse = ', '), 
-              ', values ', paste(data$FinalID[nomatch], collapse = ', '), 
-              ', see column problemFinalID')
-    
+    msg <- c(msg, 'Unrecognized FinalIDs purged')
   }
-
-  return(data)
+  
+  # final output
+  out <- data
+  if(msgs) 
+    out <- list(
+      data = out, 
+      msg = msg
+      )
+  
+  return(out)
   
 }

@@ -4,7 +4,7 @@
 \alias{cleanData}
 \title{Score samples using the CSCI tool}
 \usage{
-cleanData(data, purge = FALSE, trace = TRUE)
+cleanData(data, purge = FALSE, msgs = FALSE)
 }
 \arguments{
 \item{data}{A data frame with BMI data (see details)}
@@ -12,8 +12,19 @@ cleanData(data, purge = FALSE, trace = TRUE)
 \item{purge}{If true, a data frame will be returned
 with problematic rows removed, see details.}
 
-\item{trace}{logical indicating if warnings 
-are printed to the console}
+\item{msgs}{logical, if \code{FALSE} a purged or non-purged data frame, if \code{TRUE} a
+two-element list with the data frame and concated list of messages, see the return value}
+}
+\value{
+If \code{msgs = FALSE} (default), a data frame is returned that is either the same 
+as the input if all checks have passed or a purged (\code{purge = TRUE}) or non-purged 
+\code{purge = FALSE}) dataset with additional columns for \code{FinalID} and 
+\code{LifeStageCode}.  If \code{msg = TRUE}, a two-element list is returned, where 
+the first element \code{data} is the data frame that would be returned if \code{msgs = FALSE}
+and the second element is \code{msg} with a concatenated character string of messages
+indicating if all checks have passed and if not, which issues were encountered.  In the 
+latter case, row numbers in the messages indicate which observations in the input data 
+had issues.
 }
 \description{
 Function to find or remove errors in BMI data
@@ -36,12 +47,7 @@ rows with correct FinalID values are also checked for correct life stage codes
 in the \code{LifeStageCode} column.  Values are replaced with default values 
 in a lookup table provided with the package if they are incorrect.  A new 
 column \code{fixedLifeStageCode} is added as a T/F vector indicating which 
-rows were fixed for an incorrect life stage code. 
-
-The argument \code{trace} specifies if warnings are returned to the console 
-that provide diagnostics on rows with incorrect \code{FinalID} or \code{LifeStageCode}
-values. Row numbers apply to input data and will differ from output data if rows
-are purged.
+rows were fixed for an incorrect life stage code.
 }
 \examples{
 
@@ -50,8 +56,11 @@ data(bugs_stations)
 
 \dontrun{
 
-# function return input data if no errors
+# function returns input data
 cleanData(bugs_stations[[1]])
+
+# same as above but retrieve msgs
+cleanData(bugs_stations[[1]], msgs = TRUE)
 
 # create some wrong FinalID values in bug data
 wrongdata <- bugs_stations[[1]]
@@ -59,21 +68,24 @@ wrongdata$FinalID <- as.character(wrongdata$FinalID)
 wrongdata$FinalID[c(1, 15, 30)] <- c('idwrong1', 'idwrong2', 'idwrong3')
 
 # default, purge nothing
-# indicates wrong rows and FinalIDs, new column fixFinalID with T/F for wrong/right
+# new columns fixedLifeStageCode, ProblemFinalID with T/F for wrong/right
 cleanData(wrongdata)
 
 # purge
-# indicates wrong rows and FinalIDs, removes from output
+# removes from output
 cleanData(wrongdata, purge = TRUE)
 
 # create some wrong lifestagecodes, only applies if purge is T
 wrongdata$LifeStageCode <- as.character(wrongdata$LifeStageCode)
 wrongdata$LifeStageCode[c(2, 16, 31)] <- c('lscwrong1', 'lscwrong2', 'lscwrong3')
 
-# notice new warnings, no purge
+# no purge
 cleanData(wrongdata)
 
 #compare with purge
 cleanData(wrongdata, purge = TRUE)
+
+# with messages
+cleanData(wrongdata, purge = TRUE, msgs = TRUE)
 }
 }
