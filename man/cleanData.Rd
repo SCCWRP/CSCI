@@ -19,7 +19,7 @@ two-element list with the data frame and concated list of messages, see the retu
 If \code{msgs = FALSE} (default), a data frame is returned that is either the same 
 as the input if all checks have passed or a purged (\code{purge = TRUE}) or non-purged 
 \code{purge = FALSE}) dataset with additional columns for \code{FinalID} and 
-\code{LifeStageCode}.  If \code{msg = TRUE}, a two-element list is returned, where 
+\code{LifeStageCode}.  If \code{msgs = TRUE}, a two-element list is returned, where 
 the first element \code{data} is the data frame that would be returned if \code{msgs = FALSE}
 and the second element is \code{msg} with a concatenated character string of messages
 indicating if all checks have passed and if not, which issues were encountered.  In the 
