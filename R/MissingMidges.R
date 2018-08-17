@@ -12,10 +12,10 @@ MissingMidges<-function(mylist)
 {
   my.core<-mylist$core
   my.oe<-mylist$Suppl1_OE
-  
+
   my.core$MissingMidges_n<-sapply(my.core$SampleID, function(x)
   {
-    oe.samp<-results$Suppl1_OE[which(my.oe$SampleID==x),]
+    oe.samp<-mylist$Suppl1_OE[which(my.oe$SampleID==x),]
     length(oe.samp[which(oe.samp$OTU %in% c("Tanypodinae","Orthocladiinae","Chironominae","Podonominae","Diamesinae","Telmatogetoninae") & 
                            oe.samp$CaptureProb>=0.5 & oe.samp$MeanObserved==0),"OTU"])
   })
