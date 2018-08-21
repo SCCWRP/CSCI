@@ -1,2 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+sensitivity/*
+^README.*
+^README_files/.*

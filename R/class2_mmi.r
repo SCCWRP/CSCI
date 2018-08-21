@@ -17,7 +17,7 @@ setClass("mmi", representation(subsample = "list",
 )
 
 setMethod("nameMatch", "mmi", function(object){
-  bugs <- BMI(object@bugdata)
+  bugs <- BMIMetrics::BMI(object@bugdata)
   class(bugs) <- rev(class(bugs))
   object@bugdata <- bugs
   return(object)
@@ -29,7 +29,7 @@ setMethod("subsample", "mmi", function(object, rand = sample(10000, 1)){
 
   object@subsample <- lapply(seq(1 + rand, 20 + rand), function(i){
     set.seed(i)
-    BMIMetrics:::sample(object@bugdata)
+    BMIMetrics::sample(object@bugdata)
   })
   return(object)
 })
@@ -39,7 +39,7 @@ setMethod("metrics", "mmi", function(object){
   
   metricsList <- lapply(1:20, function(i) {
     x <- object@subsample[[i]]
-    results <- BMICSCI(aggregate(x), effort=1)[c("SampleID", csci_metrics)]
+    results <- BMIMetrics::BMICSCI(aggregate(x), effort=1)[c("SampleID", csci_metrics)]
     names(results)[-1] <- paste0(names(results)[-1], "_", i)
     results
     })
@@ -53,7 +53,7 @@ setMethod("metrics", "mmi", function(object){
 
 setMethod("rForest", "mmi", function(object){
   if(nrow(object@metrics) == 0){object <- metrics(object)}
-  load(system.file("data", "Metrics.RFModels_v2.RData",  package="CSCI"))
+  
   object@predictors <- merge(unique(object@bugdata[, c("StationCode", "SampleID")]), object@predictors, by="StationCode", all.x=TRUE)
   object@modelprediction <- as.data.frame(matrix(NA, nrow = nrow(object@predictors)))
   
@@ -61,7 +61,7 @@ setMethod("rForest", "mmi", function(object){
     object@predictors$LogWSA <-log10(object@predictors$AREA_SQKM)
   object@predictors$Log_P_MEAN <-  log10(object@predictors$P_MEAN + 0.00001)
   
-  res <- sapply(final.forests, function(rf)predict(rf, object@predictors))
+  res <- sapply(final_forests, function(rf)predict(rf, object@predictors))
   if(class(res)!="matrix")res <- data.frame(t(res[1:8]))
   
   object@modelprediction <- as.data.frame(res)
@@ -72,7 +72,7 @@ setMethod("rForest", "mmi", function(object){
 
 setMethod("score", "mmi", function(object){
   if(nrow(object@modelprediction) == 0){object <- rForest(object)}
-  load(system.file("data", "maxmin_v2.rdata",  package="CSCI"))
+
   col_names <- csci_metrics
   object@metrics <- object@metrics[order(object@metrics$SampleID), ]
   object@modelprediction <- object@modelprediction[order(object@modelprediction$V1), ]

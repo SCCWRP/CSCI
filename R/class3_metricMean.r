@@ -19,9 +19,7 @@ setMethod("initialize", "metricMean", function(.Object="metricMean", x="mmi", y=
 })
 
 setMethod("summary", "metricMean", function(object = "metricMean", report="all"){
-  load(system.file("data", "oe_stuff.rdata", package="CSCI"))
-  load(system.file("data", "extent.rdata", package="CSCI"))
-  load(system.file("data", "mahalData.rdata", package="CSCI"))
+
   arglist <- c("core", "Suppl1_mmi", "Suppl1_grps", "Suppl1_OE", "Suppl2_OE", "Suppl2_mmi")
   report <- match.arg(report, c(arglist, "all"), several.ok=TRUE)
   if(report == "all")report <- arglist
@@ -167,8 +165,7 @@ setMethod("summary", "metricMean", function(object = "metricMean", report="all")
     names(reportlist$Suppl2_OE)[5:24] <- paste0("Iteration", 1:20)
   }
   if(all(c("Suppl2_mmi", "Suppl1_mmi") %in% report)){
-    load(system.file("data", "maxmin_v2.rdata",  package="CSCI"))
-    
+
     cmmi <- melt(object@metrics, id.vars="SampleID")
     cmmi$variable <- as.character(cmmi$variable)
     cmmi$replicate <- sapply(strsplit(cmmi$variable, "_"), tail, 1)

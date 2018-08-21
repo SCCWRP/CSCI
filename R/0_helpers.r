@@ -19,7 +19,7 @@ validity <-   function(object){
   
   if(!(all(bugcolumns %in% names(object@bugdata))))
     return(print(paste("Bug data missing column:", bugcolumns[!(bugcolumns %in% names(object@bugdata))], collapse=" & ")))
-  BMI(object@bugdata)
+  BMIMetrics::BMI(object@bugdata)
   if(any(is.na(as.matrix(object@bugdata[, bugcolumns[-5]]))))
     return(print(paste("NAs found in bug data.")))
 
@@ -138,10 +138,10 @@ isInside <- function(newdata, refcaldata, averageImp, confidence = 0.99){
   pcrefcal <- princomp(refcal)
   pcdata <- data.frame(axis1 = pcrefcal$scores[, 1], axis2 = pcrefcal$scores[, 2],
                        axis3 = pcrefcal$scores[, 3])
-  suppressWarnings(.Call("R_GD_nullDevice", PACKAGE = "grDevices"))
+
   test <- dataEllipse(as.matrix(pcdata[, 1:2]), levels=c(confidence))
   test2 <- dataEllipse(as.matrix(pcdata[, 2:3]), levels=c(confidence))
-  dev.off()
+
   #Calculate the ellipse radii
   axes <- sort(unlist(union(colwise(max)(as.data.frame(test2)), colwise(max)(as.data.frame(test)))))
   xradius <-  axes[4]
