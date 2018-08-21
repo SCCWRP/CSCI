@@ -3,3 +3,6 @@
 sensitivity/*
 ^README.*
 ^README_files/.*
+^appveyor\.yml$
+^\.travis\.yml$
+docs/*

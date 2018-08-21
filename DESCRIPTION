@@ -3,6 +3,7 @@ Type: Package
 Title: Tools for California Freshwater Biotic Assessment
 Version: 1.2.0
 Date: 2018-08-01
+BugReports: https://github.com/SCCWRP/CSCI/issues
 Description: Contains tools for calculating biotic integrity from taxonomic
     count data. Includes methods for a multimetric index and observed over
     expected index.
@@ -25,5 +26,5 @@ Authors@R: c(
     email = "marcusb@sccwrp.org"
     )
   )
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 LazyData: true
