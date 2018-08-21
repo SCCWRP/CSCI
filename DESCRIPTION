@@ -18,6 +18,7 @@ Imports:
     plyr, 
     stringr,
     vegan
+Remotes: SCCWRP/BMIMetrics
 Authors@R: c(
 	person(given = "Mark", family = "Engeln",
     role = c("aut")),
@@ -26,5 +27,6 @@ Authors@R: c(
     email = "marcusb@sccwrp.org"
     )
   )
+Encoding: UTF-8
 RoxygenNote: 6.1.0
 LazyData: true
