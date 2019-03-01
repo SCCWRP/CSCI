@@ -70,6 +70,11 @@
 CSCI <- function (bugs, stations, rand = sample.int(10000, 1), distinct = TRUE) {
   options(stringsAsFactors=FALSE)
 
+  # stationcode and sampleid cannot be factors
+  bugs$StationCode <- as.character(bugs$StationCode)
+  bugs$SampleID <- as.character(bugs$SampleID)
+  stations$StationCode <- as.character(stations$StationCode)
+
   # make distinct NA 
   if(!distinct) bugs$Distinct <- NA
   
@@ -94,7 +99,7 @@ CSCI <- function (bugs, stations, rand = sample.int(10000, 1), distinct = TRUE) 
   
   mmi_s <- subsample(mmi, rand)
   mmi_s <- score(mmi_s)
-  
+
   oe <- new("oe", bugs, stations)
   oe_s <- subsample(oe, rand)
   oe_s <- score(oe_s)
