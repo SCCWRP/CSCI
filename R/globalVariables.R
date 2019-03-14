@@ -2,7 +2,7 @@ globalVariables(c('metadata', 'ddply', 'BAResult', 'new', 'results', 'pnorm', 'l
                   'dataEllipse', 'dcast', 'extent', 'maxmin', 'melt', 'metric', 'oe_stuff', 
                   'rrarefy', 'variabledevt', '.', 'BMI', 'BMICSCI', 'Distinct', 'LifeStageCode', 'MMI_Score', 'OoverE', 'Result', 'STE',
                   'SampleID', 'StationCode', 'Taxa', 'acast', 'arrange', 'colwise', 'final_forests',
-                  'variable', 'refsamples'))
+                  'variable', 'refsamples', 'refbugs'))
 
 #' @importFrom stats aggregate pnorm predict princomp
 NULL

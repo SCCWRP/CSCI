@@ -3,6 +3,7 @@
 export(CSCI)
 export(MissingMidges)
 export(cleanData)
+export(loadRefBugData)
 export(loadRefData)
 import(plyr)
 import(randomForest)
