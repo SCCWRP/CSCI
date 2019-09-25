@@ -37,7 +37,7 @@
 #' 
 #' @export
 #' 
-#' @import plyr reshape2 randomForest
+#' @import plyr reshape2
 #' 
 #' @return 
 #' A list of data frames that serve as reports in varying detail:

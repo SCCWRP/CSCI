@@ -2,7 +2,7 @@ Package: CSCI
 Type: Package
 Title: Tools for California Freshwater Biotic Assessment
 Version: 1.2.2
-Date: 2019-03-14
+Date: 2019-09-25
 BugReports: https://github.com/SCCWRP/CSCI/issues
 Description: Contains tools for calculating biotic integrity from taxonomic
     count data. Includes methods for a multimetric index and observed over
@@ -15,6 +15,9 @@ Imports:
     randomForest,
     reshape2,
     BMIMetrics,
+    ggplot2,
+    mapproj,
+    maps,
     plyr, 
     stringr,
     vegan

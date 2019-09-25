@@ -61,7 +61,7 @@ setMethod("rForest", "mmi", function(object){
     object@predictors$LogWSA <-log10(object@predictors$AREA_SQKM)
   object@predictors$Log_P_MEAN <-  log10(object@predictors$P_MEAN + 0.00001)
   
-  res <- sapply(final_forests, function(rf)predict(rf, object@predictors))
+  res <- sapply(final_forests, function(rf) randomForest:::predict.randomForest(rf, object@predictors))
   if(class(res)!="matrix")res <- data.frame(t(res[1:8]))
   
   object@modelprediction <- as.data.frame(res)

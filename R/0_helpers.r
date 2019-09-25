@@ -76,7 +76,7 @@ model.predict.RanFor.4.2 <-function(bugcal.pa,grps.final,preds.final,ranfor.mod,
   #If Cal.OOB is true, do OOB predictions, appropriate ONLY for CAL data;
   # If it is false, do a new prediction;                                                                                                              
   if(Cal.OOB==TRUE) grpprobs<-ranfor.mod$votes else 
-    grpprobs<-predict(ranfor.mod,newdata=prednew[,preds.final],type='prob')
+    grpprobs<-randomForest:::predict.randomForest(ranfor.mod,newdata=prednew[,preds.final],type='prob')
   
   ############;
   #STEP 4 -- Compute predicted occurrence probability for each modeled taxon at each new sample;
