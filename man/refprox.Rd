@@ -2,23 +2,27 @@
 % Please edit documentation in R/refprox.R
 \name{refprox}
 \alias{refprox}
-\title{Plot reference proximiy values for a test site}
+\title{Plot reference proximity values for a test site}
 \usage{
-refprox(station_dat, output = c("map", "jit", "pca", "dat"))
+refprox(station_dat, output = c("map", "mapmod", "jit", "jitmod", "pca",
+  "pcamod", "dat"))
 }
 \arguments{
 \item{station_dat}{input \code{data.frame} for the test site that includes all station data}
 
-\item{output}{chr string indicating desired output from the function, one of \code{"map", "jit", "pca", "dat"}}
+\item{output}{chr string indicating desired output from the function}
 }
 \value{
 A plot of average proximity values across all metrics if \code{output = "map"}, a facetted map for each 
-metric of proximity values if \code{output = "fac"}, a PCA plot of principal components one and two for 
-all metric proximity values if \code{output = "pca"}, or a \code{data.frame} of the proximity values for 
-all reference sites and the test site if \code{output = "dat"}.
+model and predictor of proximity values if \code{output = "mapmod"}, a jitter plot of the distribution 
+of proximity values by predictor if \code{output = "jit"}, a faceted jitter plot of the disributin of 
+proximity valuues by predictor and model if \code{output = "jitmod"}, a PCA plot of principal components 
+one and two for all metric proximity values if \code{output = "pca"}, a faceted PCA plot of principal 
+components one and two for all metric proximity values by model if \code{output = "pcamod"}, or a 
+\code{data.frame} of the proximity values for all reference sites and the test site if \code{output = "dat"}.
 }
 \description{
-Plot reference proximiy values for a test site
+Plot reference proximity values for a test site
 }
 \details{
 \code{station_dat} must have the same GIS predictors as those in \code{bugs_stations[[2]]}, specifically 
@@ -32,12 +36,23 @@ station_dat <- bugs_stations[[2]][1, ]
 # map, default
 refprox(station_dat)
 
+# map by model
+refprox(station_dat, output = 'mapmod')
+
 # jitter
 refprox(station_dat, output = 'jit')
+
+# jitter by model
+refprox(station_dat, output = 'jitmod')
 
 # pca
 refprox(station_dat, output = 'pca')
 
+# pca by model
+refprox(station_dat, output = 'pcamod')
+
 # data
-refprox(station_dat, output = 'dat')
+refdat <- refprox(station_dat, output = 'dat')
+head(refdat)
+tail(refdat)
 }

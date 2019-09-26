@@ -1,7 +1,7 @@
-#' Plot reference proximiy values for a test site
+#' Plot reference proximity values for a test site
 #'
 #' @param station_dat input \code{data.frame} for the test site that includes all station data
-#' @param output chr string indicating desired output from the function, one of \code{"map", "jit", "pca", "dat"}
+#' @param output chr string indicating desired output from the function
 #' 
 #' @details 
 #' \code{station_dat} must have the same GIS predictors as those in \code{bugs_stations[[2]]}, specifically 
@@ -13,9 +13,12 @@
 #' 
 #' @return 
 #' A plot of average proximity values across all metrics if \code{output = "map"}, a facetted map for each 
-#' metric of proximity values if \code{output = "fac"}, a PCA plot of principal components one and two for 
-#' all metric proximity values if \code{output = "pca"}, or a \code{data.frame} of the proximity values for 
-#' all reference sites and the test site if \code{output = "dat"}.
+#' model and predictor of proximity values if \code{output = "mapmod"}, a jitter plot of the distribution 
+#' of proximity values by predictor if \code{output = "jit"}, a faceted jitter plot of the disributin of 
+#' proximity valuues by predictor and model if \code{output = "jitmod"}, a PCA plot of principal components 
+#' one and two for all metric proximity values if \code{output = "pca"}, a faceted PCA plot of principal 
+#' components one and two for all metric proximity values by model if \code{output = "pcamod"}, or a 
+#' \code{data.frame} of the proximity values for all reference sites and the test site if \code{output = "dat"}.
 #' 
 #' @export
 #'
@@ -25,15 +28,26 @@
 #' # map, default
 #' refprox(station_dat)
 #' 
+#' # map by model
+#' refprox(station_dat, output = 'mapmod')
+#' 
 #' # jitter
 #' refprox(station_dat, output = 'jit')
+#' 
+#' # jitter by model
+#' refprox(station_dat, output = 'jitmod')
 #' 
 #' # pca
 #' refprox(station_dat, output = 'pca')
 #' 
+#' # pca by model
+#' refprox(station_dat, output = 'pcamod')
+#' 
 #' # data
-#' refprox(station_dat, output = 'dat')
-refprox <- function(station_dat, output = c("map", "jit", "pca", "dat")){
+#' refdat <- refprox(station_dat, output = 'dat')
+#' head(refdat)
+#' tail(refdat)
+refprox <- function(station_dat, output = c("map", "mapmod", "jit", "jitmod", "pca", "pcamod", "dat")){
   
   # select output
   output <- match.arg(output)
@@ -107,6 +121,25 @@ refprox <- function(station_dat, output = c("map", "jit", "pca", "dat")){
       scale_size_continuous(range=c(0.5,3))
   }
   
+  if(output == 'mapmod'){
+    
+    #Proximity for each model map
+    test.df.m<-reshape2::melt(test.df[,c("StationCode","New_Lat","New_Long","Clinger_Percent.prox","Coleoptera_Percent.prox","Taxonomic_Richness.prox","EPT_PercentTaxa.prox","Shredder_Taxa.prox","Intolerant_Percent.prox","OE.prox")],
+                       id.vars=c("StationCode","New_Lat","New_Long"), variable.name = "Model", value.name="Proximity")
+    test.df.m$Model<-gsub(".prox","", test.df.m$Model)
+    test.df.m$Model<-factor(test.df.m$Model, levels=c("Clinger_Percent","Coleoptera_Percent","Taxonomic_Richness","EPT_PercentTaxa","Shredder_Taxa","Intolerant_Percent","OE"))
+    
+    out <- basemap+
+      geom_point(data=test.df.m[which(test.df.m$StationCode %in% ref.stations & test.df.m$Proximity>0),], aes(x=New_Long, y=New_Lat, size=Proximity), shape=21, fill="gray25")+  geom_point(data=test.df.m[which(test.df.m$StationCode %in% ref.stations & test.df.m$Proximity==0),], aes(x=New_Long, y=New_Lat, size=Proximity), size=0.1, color="white")+
+      geom_point(data=test.df.m[which(test.df.m$StationCode %in% ref.stations & test.df.m$Proximity==0),], aes(x=New_Long, y=New_Lat, size=Proximity), size=0.1, color="white")+
+      geom_point(data=test.df.m[which(test.df.m$StationCode %in% my.station),], aes(x=New_Long, y=New_Lat), shape=22, size=3, fill="yellow")+
+      facet_wrap(~Model)+
+      ggtitle(paste("Reference sites for",my.station))+
+      theme(axis.text=element_blank())+xlab("")+ylab("")+
+      scale_size_continuous(range=c(0.5,3))
+    
+  }
+  
   if(output == 'jit'){
     
     #Based on mean proximity (one panel per predictor, with nothing meaningful on the x axis)
@@ -121,6 +154,27 @@ refprox <- function(station_dat, output = c("map", "jit", "pca", "dat")){
       scale_size_continuous(range = c(0.5,3))+
       xlab("")+ylab("")+
       theme_classic()+theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+    
+  }
+  
+  if(output == 'jitmod'){
+    
+    test.df.m<-melt(test.df[,c("StationCode","New_Lat","New_Long","Clinger_Percent.prox","Coleoptera_Percent.prox","Taxonomic_Richness.prox","EPT_PercentTaxa.prox","Shredder_Taxa.prox","Intolerant_Percent.prox","OE.prox")],
+                       id.vars=c("StationCode","New_Lat","New_Long"), variable.name = "Model", value.name="Proximity")
+    test.df.m$Model<-gsub(".prox","", test.df.m$Model)
+    test.df.m$Model<-factor(test.df.m$Model, levels=c("Clinger_Percent","Coleoptera_Percent","Taxonomic_Richness","EPT_PercentTaxa","Shredder_Taxa","Intolerant_Percent","OE"))
+    test.df.m2<-reshape2::melt(test.df[,c("StationCode", "LogWSA", "SITE_ELEV", "PPT_00_09","TEMP_00_09", "SumAve_P", "KFCT_AVE", "BDH_AVE", "Log_P_MEAN", "ELEV_RANGE")],
+                        variable.name="Predictor", value.name="PredictorValue")
+    test.df.m3<-merge(test.df.m, test.df.m2)
+    out <- ggplot(data=test.df.m3, aes(x=Model, y=PredictorValue))+
+      geom_jitter(data=test.df.m3[which(test.df.m3$StationCode %in% ref.stations & test.df.m3$Proximity==0),], aes(size=Proximity), size=0.1, color="gray80")+
+      geom_jitter(data=test.df.m3[which(test.df.m3$StationCode %in% ref.stations & test.df.m3$Proximity>0),], aes(size=Proximity), shape=21, fill="gray25", position=position_jitter(height=0, width=0.25))+
+      geom_point(data=test.df.m3[which(test.df.m3$StationCode %in% my.station),], shape=22, size=3, fill="yellow")+
+      facet_wrap(~Predictor, scales="free")+
+      ggtitle(paste("Reference sites for",my.station))+
+      scale_size_continuous(range = c(0.5,3))+
+      xlab("")+ylab("")+
+      theme_classic()+theme(axis.text.x = element_text(angle=45, hjust=1))
     
   }
     
@@ -146,6 +200,39 @@ refprox <- function(station_dat, output = c("map", "jit", "pca", "dat")){
       theme(axis.text = element_blank())+
       geom_text(data=pred.pca.loadings, aes(label=Var, x=PC1.r, y=PC2.r)) #May need tweaking for legibility
 
+  }
+  
+  if(output == "pcamod"){
+
+    test.df.m<-melt(test.df[,c("StationCode","New_Lat","New_Long","Clinger_Percent.prox","Coleoptera_Percent.prox","Taxonomic_Richness.prox","EPT_PercentTaxa.prox","Shredder_Taxa.prox","Intolerant_Percent.prox","OE.prox")],
+                       id.vars=c("StationCode","New_Lat","New_Long"), variable.name = "Model", value.name="Proximity")
+    test.df.m$Model<-gsub(".prox","", test.df.m$Model)
+    test.df.m$Model<-factor(test.df.m$Model, levels=c("Clinger_Percent","Coleoptera_Percent","Taxonomic_Richness","EPT_PercentTaxa","Shredder_Taxa","Intolerant_Percent","OE"))
+    test.df.m2<-reshape2::melt(test.df[,c("StationCode", "LogWSA", "SITE_ELEV", "PPT_00_09","TEMP_00_09", "SumAve_P", "KFCT_AVE", "BDH_AVE", "Log_P_MEAN", "ELEV_RANGE")],
+                        variable.name="Predictor", value.name="PredictorValue")
+    test.df.m3<-merge(test.df.m, test.df.m2)    
+    
+    pred.df<-test.df[ c("New_Lat","New_Long",  "LogWSA", "SITE_ELEV", "PPT_00_09","TEMP_00_09", "SumAve_P", "KFCT_AVE", "BDH_AVE", "Log_P_MEAN", "ELEV_RANGE")]
+    pred.pca<-prcomp(pred.df, scale=T, retx=T,center=T)
+    test.df<-cbind(test.df, pred.pca$x[,1:3])
+    
+    #Prepare labels
+    pred.pca.loadings<-data.frame(pred.pca$rotation)
+    pred.pca.loadings$Var<-c("New_Lat","New_Long",  "LogWSA", "SITE_ELEV", "PPT_00_09","TEMP_00_09", "SumAve_P", "KFCT_AVE", "BDH_AVE", "Log_P_MEAN", "ELEV_RANGE")
+    pred.pca.loadings$PC1.r<-pred.pca.loadings$PC1* (max(pred.pca$x[,1]) -min(pred.pca$x[,1]))
+    pred.pca.loadings$PC2.r<-pred.pca.loadings$PC2* (max(pred.pca$x[,2]) -min(pred.pca$x[,2]))
+    pred.pca.loadings$PC3.r<-pred.pca.loadings$PC3* (max(pred.pca$x[,3]) -min(pred.pca$x[,3]))
+    
+    #PCA for each model
+    test.dfB<-merge(test.df.m3, test.df[,c("StationCode", "PC1","PC2","PC3")])
+    
+    out <- ggplot(test.dfB, aes(x=PC1, y=PC2))+
+      geom_point(data=test.dfB[which(test.dfB$StationCode %in% ref.stations & test.dfB$Proximity==0),], aes(size=Proximity), size=0.1, color="gray80")+
+      geom_point(data=test.dfB[which(test.dfB$StationCode %in% ref.stations & test.dfB$Proximity>0),], aes(size=Proximity), shape=21, fill="gray25")+
+      geom_point(data=test.dfB[which(test.dfB$StationCode %in% my.station),], shape=22, size=3, fill="yellow")+
+      facet_wrap(~Model)+
+      theme_classic()  +theme(axis.text = element_blank())
+    
   }
   
   return(out)
