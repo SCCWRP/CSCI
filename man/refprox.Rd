@@ -4,8 +4,10 @@
 \alias{refprox}
 \title{Plot reference proximity values for a test site}
 \usage{
-refprox(station_dat, output = c("map", "mapmod", "jit", "jitmod", "pca",
-  "pcamod", "dat"))
+refprox(
+  station_dat,
+  output = c("map", "mapmod", "jit", "jitmod", "pca", "pcamod", "dat")
+)
 }
 \arguments{
 \item{station_dat}{input \code{data.frame} for the test site that includes all station data}
