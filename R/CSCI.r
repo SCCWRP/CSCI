@@ -38,6 +38,7 @@
 #' @export
 #' 
 #' @import plyr reshape2
+#' @importFrom BMIMetrics loadMetaData
 #' 
 #' @return 
 #' A list of data frames that serve as reports in varying detail:
