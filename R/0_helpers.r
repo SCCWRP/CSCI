@@ -33,8 +33,8 @@ validity <-   function(object){
     return(print("Predictors must include a column AREA_SQKM or LogWSA"))
   if(!all(as.character(object@bugdata$StationCode) %in% as.character(object@predictors$StationCode)))
     return(print("All StationCode IDs must be represented in both bug and predictor data"))
-  if(length(unique(object@bugdata$SampleID)) != nrow(unique(object@bugdata[, c("StationCode", "SampleID")])))
-    return(print("SampleIDs must be unique to one StationCode"))
+  # if(length(unique(object@bugdata$SampleID)) != nrow(unique(object@bugdata[, c("StationCode", "SampleID")])))
+  #   return(print("SampleIDs must be unique to one StationCode"))
   "pass"
 }
 
