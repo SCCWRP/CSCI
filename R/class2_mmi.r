@@ -46,7 +46,7 @@ setMethod("metrics", "mmi", function(object){
   result.reduce <- Reduce(function(x,y)merge(x,y, by="SampleID"), metricsList)
   names <- csci_metrics
   means <- sapply(names, function(names)apply(result.reduce[, grep(names, names(result.reduce))], 1, mean))
-  if(class(means) != "matrix")means <- t(means)
+  if(all(class(means) != "matrix"))means <- t(means)
   object@metrics <- cbind(result.reduce, means)
   return(object)
 })
@@ -62,7 +62,7 @@ setMethod("rForest", "mmi", function(object){
   object@predictors$Log_P_MEAN <-  log10(object@predictors$P_MEAN + 0.00001)
   
   res <- sapply(final_forests, function(rf) randomForest:::predict.randomForest(rf, object@predictors))
-  if(class(res)!="matrix")res <- data.frame(t(res[1:8]))
+  if(all(class(res)!="matrix"))res <- data.frame(t(res[1:8]))
   
   object@modelprediction <- as.data.frame(res)
   names(object@modelprediction) <- csci_metrics
@@ -83,7 +83,7 @@ setMethod("score", "mmi", function(object){
       result < 0, 0, result))
     result
   })
-  if(class(object_result) != "matrix")object_result <- t(object_result)
+  if(all(class(object_result) != "matrix"))object_result <- t(object_result)
   object@result <- data.frame(object_result)
   names(object@result) <- paste0(col_names, "_score")
   object@finalscore <- data.frame(unique(object@modelprediction$V1), 
