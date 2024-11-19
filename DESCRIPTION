@@ -14,7 +14,7 @@ Depends:
 Imports:
     randomForest,
     reshape2,
-    BMIMetrics,
+    BMIMetrics (>= 0.2),
     ggplot2,
     mapproj,
     maps,
