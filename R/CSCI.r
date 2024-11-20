@@ -68,7 +68,7 @@
 #' for a new set of sites based on a Random Forest predictive model} (Version 4.2)[R script]
 #' 
 #' @seealso \code{\link{bugs_stations}}
-CSCI <- function (bugs, stations, rand = sample.int(10000, 1), distinct = TRUE) {
+CSCI <- function (bugs, stations, rand = sample.int(10000, 1), distinct = TRUE, metadata.year = 2025) {
   options(stringsAsFactors=FALSE)
 
   # stationcode and sampleid cannot be factors
@@ -93,7 +93,8 @@ CSCI <- function (bugs, stations, rand = sample.int(10000, 1), distinct = TRUE) 
   
   stations <- stations[, names(stations) %in% c("StationCode",
                                                 csci_predictors )]
-  mmi <- new("mmi", bugs, stations)
+  
+  mmi <- new("mmi", bugdata = bugs, predictors = stations, metadata.year = metadata.year)
   valid <- validity(mmi)
   
   if(valid != "pass")stop(valid)
@@ -101,7 +102,7 @@ CSCI <- function (bugs, stations, rand = sample.int(10000, 1), distinct = TRUE) 
   mmi_s <- subsample(mmi, rand)
   mmi_s <- score(mmi_s)
 
-  oe <- new("oe", bugs, stations)
+  oe <- new("oe", bugdata = bugs, predictors = stations, metadata.year = metadata.year)
   oe_s <- subsample(oe, rand)
   oe_s <- score(oe_s)
   

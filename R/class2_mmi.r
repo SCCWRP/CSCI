@@ -4,7 +4,9 @@ setClass("mmi", representation(subsample = "list",
                                result = "data.frame",
                                finalscore = "data.frame",
                                datalength = "numeric",
-                               summary ="data.frame"),
+                               summary ="data.frame",
+                               metadata.year="numeric"
+                               ),
          contains="bugs",
          prototype = list(subsample = data.frame(),
                           metrics = data.frame(),
@@ -12,12 +14,25 @@ setClass("mmi", representation(subsample = "list",
                           result = data.frame(),
                           finalscore = data.frame(),
                           datalength = numeric(),
-                          summary = data.frame()
+                          summary = data.frame(),
+                          metadata.year=2025
          )
 )
 
+setMethod(
+  "initialize", "mmi",
+  function(.Object, bugdata = NULL, predictors = NULL, metadata.year = 2025, ...) {
+    .Object <- callNextMethod(.Object, ...)
+    if (!is.null(bugdata)) .Object@bugdata <- bugdata
+    if (!is.null(predictors)) .Object@predictors <- predictors
+    .Object@metadata.year <- metadata.year
+    return(.Object)
+  }
+)
+
+
 setMethod("nameMatch", "mmi", function(object){
-  bugs <- BMIMetrics::BMI(object@bugdata)
+  bugs <- BMIMetrics::BMI(object@bugdata, object@metadata.year)
   class(bugs) <- rev(class(bugs))
   object@bugdata <- bugs
   return(object)
@@ -29,7 +44,7 @@ setMethod("subsample", "mmi", function(object, rand = sample(10000, 1)){
 
   object@subsample <- lapply(seq(1 + rand, 20 + rand), function(i){
     set.seed(i)
-    BMIMetrics::sample(object@bugdata)
+    BMIMetrics::sample(object@bugdata, object@metadata.year)
   })
   return(object)
 })

@@ -3,15 +3,30 @@ setClass("oe", representation(ambiguous="data.frame",
                               iterations="matrix",
                               fulliterations="list",
                               datalength="numeric",
-                              oeresults="data.frame"), 
+                              oeresults="data.frame",
+                              metadata.year="numeric"
+                              ), 
          contains="bugs",
          prototype=list(ambiguous=data.frame(),
                         oesubsample=data.frame(),
                         iterations=matrix(),
                         fulliterations=list(),
                         datalength=numeric(),
-                        oeresults=data.frame()
+                        oeresults=data.frame(),
+                        metadata.year=2025
          ))
+
+
+setMethod(
+  "initialize", "oe",
+  function(.Object, bugdata = NULL, predictors = NULL, metadata.year = 2025, ...) {
+    .Object <- callNextMethod(.Object, ...)
+    if (!is.null(bugdata)) .Object@bugdata <- bugdata
+    if (!is.null(predictors)) .Object@predictors <- predictors
+    .Object@metadata.year <- metadata.year
+    return(.Object)
+  }
+)
 
 
 setMethod("nameMatch", "oe", function(object, effort = "SAFIT1__OTU_a"){
@@ -28,7 +43,8 @@ setMethod("nameMatch", "oe", function(object, effort = "SAFIT1__OTU_a"){
                           plyr::summarise, Result = sum(Result))
 
   ###Match to STE###
-  load(system.file("metadata.rdata", package="BMIMetrics"))
+  load(system.file( paste0("metadata_STE", object@metadata.year, ".rdata") , package="BMIMetrics"))
+  # BMIMetrics::loadMetaData(metadata.year = metadata.year)
   otu_crosswalk <- metadata
   object@bugdata$STE <- rep(NA, length(object@bugdata$Taxa))
   object@bugdata$STE <- otu_crosswalk[match(object@bugdata$Taxa, otu_crosswalk$FinalID), as.character(effort)]
