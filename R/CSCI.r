@@ -100,11 +100,20 @@ CSCI <- function (bugs, stations, rand = sample.int(10000, 1), distinct = TRUE, 
   if(valid != "pass")stop(valid)
   
   mmi_s <- subsample(mmi, rand)
+  print("mmi_s")
+  print(mmi_s)
   mmi_s <- score(mmi_s)
+  print("mmi_score")
+  print(mmi_s)
 
   oe <- new("oe", bugdata = bugs, predictors = stations, metadata.year = metadata.year)
+
   oe_s <- subsample(oe, rand)
+  print("oe_s")
+  print(oe_s)
   oe_s <- score(oe_s)
+  print("oe_score")
+  print(oe_s)
   
   res <- new("metricMean", mmi_s, oe_s)
   report <- summary(res)
