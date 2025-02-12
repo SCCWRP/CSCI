@@ -44,7 +44,9 @@ setMethod("subsample", "mmi", function(object, rand = sample(10000, 1)){
 
   object@subsample <- lapply(seq(1 + rand, 20 + rand), function(i){
     set.seed(i)
-    BMIMetrics::sample(object@bugdata, object@metadata.year)
+    # Excluding metadata.year here - It doesnt seem to like that as a second argument and it appears it disrupted the subsampling
+    # BMIMetrics::sample(object@bugdata, object@metadata.year)
+    BMIMetrics::sample(object@bugdata)
   })
   return(object)
 })
