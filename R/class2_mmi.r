@@ -56,13 +56,9 @@ setMethod("metrics", "mmi", function(object){
   
   metricsList <- lapply(1:20, function(i) {
     x <- object@subsample[[i]]
-    print("x")
-    print(x)
+    
     results <- BMIMetrics::BMICSCI(aggregate(x), effort=1)[c("SampleID", csci_metrics)]
     names(results)[-1] <- paste0(names(results)[-1], "_", i)
-    
-    print("results")
-    print(results)
     
     results
     
