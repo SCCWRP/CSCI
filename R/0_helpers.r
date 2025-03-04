@@ -19,7 +19,10 @@ validity <-   function(object){
   
   if(!(all(bugcolumns %in% names(object@bugdata))))
     return(print(paste("Bug data missing column:", bugcolumns[!(bugcolumns %in% names(object@bugdata))], collapse=" & ")))
-  BMIMetrics::BMI(object@bugdata)
+
+  # Specify the metadata year
+  BMIMetrics::BMI(object@bugdata, object@metadata.year)
+  
   if(any(is.na(as.matrix(object@bugdata[, bugcolumns[-5]]))))
     return(print(paste("NAs found in bug data.")))
 

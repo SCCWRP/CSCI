@@ -4,7 +4,9 @@ setClass("mmi", representation(subsample = "list",
                                result = "data.frame",
                                finalscore = "data.frame",
                                datalength = "numeric",
-                               summary ="data.frame"),
+                               summary ="data.frame",
+                               metadata.year="numeric"
+                               ),
          contains="bugs",
          prototype = list(subsample = data.frame(),
                           metrics = data.frame(),
@@ -12,12 +14,25 @@ setClass("mmi", representation(subsample = "list",
                           result = data.frame(),
                           finalscore = data.frame(),
                           datalength = numeric(),
-                          summary = data.frame()
+                          summary = data.frame(),
+                          metadata.year=2025
          )
 )
 
+setMethod(
+  "initialize", "mmi",
+  function(.Object, bugdata = NULL, predictors = NULL, metadata.year = 2025, ...) {
+    .Object <- callNextMethod(.Object, ...)
+    if (!is.null(bugdata)) .Object@bugdata <- bugdata
+    if (!is.null(predictors)) .Object@predictors <- predictors
+    .Object@metadata.year <- metadata.year
+    return(.Object)
+  }
+)
+
+
 setMethod("nameMatch", "mmi", function(object){
-  bugs <- BMIMetrics::BMI(object@bugdata)
+  bugs <- BMIMetrics::BMI(object@bugdata, object@metadata.year)
   class(bugs) <- rev(class(bugs))
   object@bugdata <- bugs
   return(object)
@@ -29,6 +44,8 @@ setMethod("subsample", "mmi", function(object, rand = sample(10000, 1)){
 
   object@subsample <- lapply(seq(1 + rand, 20 + rand), function(i){
     set.seed(i)
+    # Excluding metadata.year here - It doesnt seem to like that as a second argument and it appears it disrupted the subsampling
+    # BMIMetrics::sample(object@bugdata, object@metadata.year)
     BMIMetrics::sample(object@bugdata)
   })
   return(object)
@@ -39,9 +56,12 @@ setMethod("metrics", "mmi", function(object){
   
   metricsList <- lapply(1:20, function(i) {
     x <- object@subsample[[i]]
+    
     results <- BMIMetrics::BMICSCI(aggregate(x), effort=1)[c("SampleID", csci_metrics)]
     names(results)[-1] <- paste0(names(results)[-1], "_", i)
+    
     results
+    
     })
   result.reduce <- Reduce(function(x,y)merge(x,y, by="SampleID"), metricsList)
   names <- csci_metrics
