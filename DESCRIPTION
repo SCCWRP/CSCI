@@ -35,5 +35,6 @@ Encoding: UTF-8
 RoxygenNote: 7.0.2
 LazyData: true
 Suggests: 
+    readr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
