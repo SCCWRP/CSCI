@@ -49,6 +49,11 @@
 #' tail(refdat)
 refprox <- function(station_dat, output = c("map", "mapmod", "jit", "jitmod", "pca", "pcamod", "dat")){
   
+  # Test fix code from Rafi - Tue Jul 22
+  station_dat <- station_dat %>% dplyr::select(StationCode, AREA_SQKM, New_Lat, New_Long, SITE_ELEV,
+                                        PPT_00_09, TEMP_00_09, SumAve_P, KFCT_AVE, BDH_AVE,
+                                        P_MEAN, ELEV_RANGE)
+  
   # select output
   output <- match.arg(output)
   
