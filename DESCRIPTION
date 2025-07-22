@@ -18,9 +18,10 @@ Imports:
     ggplot2,
     mapproj,
     maps,
-    plyr, 
+    plyr,
     stringr,
-    vegan
+    vegan,
+    dplyr
 Remotes: SCCWRP/BMIMetrics
 Authors@R: c(
 	person(given = "Mark", family = "Engeln",
@@ -33,3 +34,6 @@ Authors@R: c(
 Encoding: UTF-8
 RoxygenNote: 7.0.2
 LazyData: true
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
