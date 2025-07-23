@@ -18,9 +18,10 @@ Imports:
     ggplot2,
     mapproj,
     maps,
-    plyr, 
+    plyr,
     stringr,
-    vegan
+    vegan,
+    dplyr
 Remotes: SCCWRP/BMIMetrics
 Authors@R: c(
 	person(given = "Mark", family = "Engeln",
