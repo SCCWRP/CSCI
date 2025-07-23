@@ -18,6 +18,7 @@ Install the package as follows:
 ``` r
 install.packages('devtools')
 library(devtools)
+install_github('SCCWRP/BMIMetrics') # <--- This is a dependency that will not automatically install when CSCI is installed
 install_github('SCCWRP/CSCI')
 library(CSCI)
 ```
