@@ -4,7 +4,13 @@
 \alias{CSCI}
 \title{Score samples using the CSCI tool}
 \usage{
-CSCI(bugs, stations, rand = sample.int(10000, 1), distinct = TRUE)
+CSCI(
+  bugs,
+  stations,
+  rand = sample.int(10000, 1),
+  distinct = TRUE,
+  metadata.year = 2025
+)
 }
 \arguments{
 \item{bugs}{A data frame with BMI data (see details)}

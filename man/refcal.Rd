@@ -4,7 +4,9 @@
 \name{refcal}
 \alias{refcal}
 \title{refcal}
-\format{A \code{data.frame}}
+\format{
+A \code{data.frame}
+}
 \usage{
 refcal
 }

@@ -4,7 +4,9 @@
 \name{oe_stuff}
 \alias{oe_stuff}
 \title{oe_stuff}
-\format{A \code{list}}
+\format{
+A \code{list}
+}
 \usage{
 oe_stuff
 }
