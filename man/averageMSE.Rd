@@ -4,7 +4,9 @@
 \name{averageMSE}
 \alias{averageMSE}
 \title{averageMSE}
-\format{A \code{data.frame}}
+\format{
+A \code{data.frame}
+}
 \usage{
 averageMSE
 }

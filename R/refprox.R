@@ -10,6 +10,7 @@
 #' in those in \code{loadRefData()}.
 #' 
 #' @import ggplot2
+#' @importFrom magrittr %>%
 #' 
 #' @return 
 #' A plot of average proximity values across all metrics if \code{output = "map"}, a facetted map for each 

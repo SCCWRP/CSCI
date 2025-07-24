@@ -4,7 +4,9 @@
 \name{extent}
 \alias{extent}
 \title{Sample extents}
-\format{A \code{data.frame}}
+\format{
+A \code{data.frame}
+}
 \usage{
 extent
 }

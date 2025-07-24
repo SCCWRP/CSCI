@@ -4,7 +4,7 @@
 \alias{loadMetaData}
 \title{Read in reference taxonomy data used to build CSCI models}
 \usage{
-loadMetaData()
+loadMetaData(metadata.year = 2025)
 }
 \description{
 Read in reference taxonomy data used to build CSCI models

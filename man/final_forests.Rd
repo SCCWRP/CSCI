@@ -4,7 +4,9 @@
 \name{final_forests}
 \alias{final_forests}
 \title{Random forest models}
-\format{A list of \code{\link[randomForest]{randomForest}} modela}
+\format{
+A list of \code{\link[randomForest]{randomForest}} modela
+}
 \usage{
 final_forests
 }

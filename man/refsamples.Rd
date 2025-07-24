@@ -4,7 +4,9 @@
 \name{refsamples}
 \alias{refsamples}
 \title{refsamples}
-\format{A \code{data.frame}}
+\format{
+A \code{data.frame}
+}
 \usage{
 refsamples
 }

@@ -32,7 +32,7 @@ Authors@R: c(
     )
   )
 Encoding: UTF-8
-RoxygenNote: 7.0.2
+RoxygenNote: 7.3.2
 LazyData: true
 Suggests: 
     testthat (>= 3.0.0)

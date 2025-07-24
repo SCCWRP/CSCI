@@ -4,7 +4,9 @@
 \name{maxmin}
 \alias{maxmin}
 \title{maxmin}
-\format{A \code{matrix}}
+\format{
+A \code{matrix}
+}
 \usage{
 maxmin
 }
